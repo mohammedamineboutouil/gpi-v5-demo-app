@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: gpi-v5-demo-app
+
+swift:
+  connect:
+    config: file:config/config-swift-connect.enc
+    secret: file:config/config-swift-connect-secret.ks

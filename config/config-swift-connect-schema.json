@@ -1,0 +1,1039 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "The SWIFT SDK Schema",
+  "type": "object",
+  "properties": {
+    "configuration": {
+      "title": "The Configuration Schema",
+      "description": "Configuration object for defining host (API Gateway, gpi Connector), API Services (gpi Tracker, pre-Val, TSS etc.,) and Security Footprint (SAG/SNL/HSM, Soft Certificate etc.,) information",
+      "type": "object",
+      "properties": {
+        "hosts": {
+          "title": "The Hosts Schema",
+          "description": "Parent element for defining API Gateway and gpi Connector host related information",
+          "type": "object",
+          "properties": {
+            "call_timeout_sec": {
+              "title": "The Http client Call timeout Schema",
+              "description": "Set the HttpClient Call with the ConnectTimeout, ReadTimeout and WriteTimeout",
+              "type": "string",
+              "default": ""
+            },
+            "xSwift_Signature_Header": {
+              "title": "The Http xSwift Signature Header name",
+              "description": "Nr verify and Sign rely on that setup for JWT  processing",
+              "type": "string",
+              "default": ""
+            },
+            "api_gateway": {
+              "title": "The Api_gateway Schema",
+              "description": "API gateway related connectivity attributes ",
+              "type": "object",
+              "properties": {
+                "host": {
+                  "title": "The Host Schema",
+                  "description": "API Gateway URL that is applicable to the identified environment.\r\n\"https://api.swiftnet.sipn.swift.com\" for live environment\r\n\"https://api-test.swiftnet.sipn.swift.com\" for pilot environment",
+                  "type": "string",
+                  "default": ""
+                },
+                "trust_alias": {
+                  "title": "The Trust_alias Schema",
+                  "description": "Alias corresponding to the API Gateway Public certificate which is used by SDK in the context of establishing a 1-way SSL connection with API gateway.",
+                  "type": "string",
+                  "default": ""
+                },
+                "consumer_key": {
+                  "title": "The Consumer_key Schema",
+                  "description": "Consumer Key (aka API Key) obtained from Swift Developer Portal while registering the Application.",
+                  "type": "string",
+                  "default": ""
+                },
+                "consumer_secret": {
+                  "title": "The Consumer_secret Schema",
+                  "description": "Consumer Secret obtained by the developer from Swift Developer portal while registering the Client Application.",
+                  "type": "string",
+                  "default": ""
+                },
+                "authorization_service": {
+                  "title": "The Authorization_service Schema",
+                  "description": "Object that consolidates API Gateway session related information ",
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "title": "The Url Schema",
+                      "description": "OAUTH 2.0 token resource absolute path (short version) \"/oauth2/v1/token\". ",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "audience": {
+                      "title": "The Audience Schema",
+                      "description": "Absolute path of OAUTH 2.0 token resource including the domain name (full version) \"https://api.swiftnet.sipn.swift.com/oauth2/v1/token\" for live environment\r\n\"https://api-test.swiftnet.sipn.swift.com/oauth2/v1/token\" for pilot environment  ",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "scope": {
+                      "title": "The Scope Schema",
+                      "description": "OAuth token session scope. Client Applications can request API Gateway session scope upto the granularity of API Services and RBAC roles. \r\n\r\nScope must be defined as a list of <Service Name>/<RBAC role> pairs with a space (\" \") separating the Service Name with the service RBAC role. If you want to specify multiple RBAC roles on a service then the Service Name repeats with each RBAC Role (see example 1 below). Specifying RBAC role is optional i.e., a service may be provided without an RBAC role (see example 2). Scope must include at least one service (see example 2), in other words defining scope is mandatory. However, if you want the session scope for multiple API Services then add multiple pairs of \"<ServiceName>/<RBACRole>\" as illustrated in example 4.  \r\n\r\n<ServiceName> must comply to SWIFTNet Service naming convention and <RBAC Role> must comply to SWIFTNet RBAC role naming convention.\r\n\r\nSome examples,\r\n1) swift.apitracker/FullViewer swift.apitracker/Update\r\n2) swift.apitracker\r\n3) swift.apitracker swift.preval\r\n4) swift.apitracker/FullViewer swift.preval/access_to_service",
+                      "type": "string",
+                      "default": ""
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "audience",
+                    "scope"
+                  ]
+                },
+                "authorization_service_v2": {
+                  "title": "The Authorization_service Schema",
+                  "description": "Object that consolidates API Gateway session related information ",
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "title": "The Url Schema",
+                      "description": "OAUTH 2.0 /v2 token resource absolute path for (short version) \"/oauth2/v2/token\". ",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "audience": {
+                      "title": "The Audience Schema",
+                      "description": "Absolute path of OAUTH 2.0 /v2 token resource including the domain name (full version) \"https://api.swiftnet.sipn.swift.com/oauth2/v2/token\" for live environment\r\n\"https://api-test.swiftnet.sipn.swift.com/oauth2/v2/token\" for pilot environment  ",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "scope": {
+                      "title": "The Scope Schema",
+                      "description": "OAuth token session scope. Client Applications can request API Gateway using OAuth scope and this is mandatory. \r\n\r\nFor valid scopes refer corresponing OAS spec in the securitySchemes and security section. Example: urn:notification:provider:internal urn:swiftref:internal",
+                      "type": "string",
+                      "default": ""
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "audience",
+                    "scope"
+                  ]
+                }
+              },
+              "required": [
+                "host",
+                "trust_alias",
+                "consumer_key",
+                "consumer_secret"
+              ],
+              "anyOf": [
+                {
+                  "required": [
+                    "authorization_service"
+                  ]
+                },
+                {
+                  "required": [
+                    "authorization_service_v2"
+                  ]
+                }
+              ]
+            },
+            "gpi_connector": {
+              "title": "The Gpi_connector Schema",
+              "description": "A parent object for gpi connector connectivity information",
+              "type": "object",
+              "properties": {
+                "host": {
+                  "title": "The Host Schema",
+                  "description": "gpi Connector hostname and port. Example, https://bewx2768:9000",
+                  "type": "string",
+                  "default": ""
+                },
+                "trust_alias": {
+                  "title": "The Trust_alias Schema",
+                  "description": "Alias corresponding to the gpi Connector public certificate which is used by SDK in the context of establishing a 1-way SSL connection with gpi Connector.",
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": [
+                "host",
+                "trust_alias"
+              ]
+            },
+            "microgateway": {
+              "title": "The Microgateway Schema",
+              "description": "A parent object for microgateway connectivity information",
+              "type": "object",
+              "properties": {
+                "host": {
+                  "title": "The Host Schema",
+                  "description": "Microgateway hostname and port. Example, https://bewx2768:9000",
+                  "type": "string",
+                  "default": ""
+                },
+                "mgw_service": {
+                  "title": "The Service Schema",
+                  "description": "MGW service resource absolute path (short version) \"/swift/mgw\". ",
+                  "type": "string",
+                  "default": ""
+                },
+                "trust_alias": {
+                  "title": "The Trust_alias Schema",
+                  "description": "Alias corresponding to the Microgateway public certificate which is used by SDK in the context of establishing a 1-way SSL connection with Microgateway.",
+                  "type": "string",
+                  "default": ""
+                },
+                "client_alias": {
+                  "title": "The Client certificate alias Schema",
+                  "description": "Alias corresponding to the client public certificate which is used by SDK in the context of establishing a 2-way SSL connection with Microgateway.",
+                  "type": "string",
+                  "default": ""
+                },
+                "api": {
+                  "title": "The API Schema",
+                  "description": "A parent object for api connectivity information",
+                  "type": "object",
+                  "properties": {
+                    "management_apikey": {
+                      "title": "Microgateway Management Apikey",
+                      "description": "Authorization API Key to access MGW Management service",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "configuration_apikey": {
+                      "title": "Microgateway Configuration Apikey",
+                      "description": "Authorization API Key to access MGW Configuration service",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "monitoring_apikey": {
+                      "title": "Microgateway Monitoring Apikey",
+                      "description": "Authorization API Key to access MGW Monitoring service",
+                      "type": "string",
+                      "default": ""
+                    }
+                  },
+                  "required": [
+                    "management_apikey",
+                    "configuration_apikey",
+                    "monitoring_apikey"
+                  ]
+                },
+                "amqp": {
+                  "title": "The AMQP Connection Schema",
+                  "description": "A parent object for amqp connectivity information",
+                  "type": "object",
+                  "properties": {
+                    "connection_url": {
+                      "title": "AMQP Connection URL",
+                      "description": "AMQP connection URL to Microgateway",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "outbound_jms_queue": {
+                      "title": "AMQP Outbound JMS Queue",
+                      "description": "JMS Queue name to send Outbound API call via AMQP",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "inbound_jms_queue": {
+                      "title": "AMQP Inbound JMS Queue",
+                      "description": "JMS Queue name to receive Inbound API call via AMQP",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "iso20022_validate": {
+                      "title": "AMQP ISO20022 validation type",
+                      "description": "ISO20022 validation type for Inbound/Outbound API calls on MGW side: ALL, REQUEST, RESPONSE, NONE",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "response_timeout_millisec": {
+                      "title": "Response Timeout, milliseconds",
+                      "description": "Timeout to wait for response, milliseconds",
+                      "type": "string",
+                      "default": ""
+                    }
+                  },
+                  "required": [
+                    "connection_url",
+                    "outbound_jms_queue",
+                    "inbound_jms_queue",
+                    "iso20022_validate",
+                    "response_timeout_millisec"
+                  ]
+                },
+                "imdg": {
+                  "title": "The IMDG Connection Schema",
+                  "description": "A parent object for IMDG connectivity information",
+                  "type": "object",
+                  "properties": {
+                    "hazelcast_instance_address": {
+                      "title": "IMDG Instance Address",
+                      "description": "IMDG Hazelcast Instance Address",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "hazelcast_request_queue": {
+                      "title": "IMDG Request Queue",
+                      "description": "IMDG Queue name to send call via Hazelcast",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "hazelcast_response_queue": {
+                      "title": "IMDG Response Queue",
+                      "description": "IMDG Queue name to receive call via Hazelcast",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "hazelcast_iso20022_validate": {
+                      "title": "IMDG ISO20022 validation type",
+                      "description": "ISO20022 validation type for Hazelcastd API calls on MGW side: ALL, REQUEST, RESPONSE, NONE",
+                      "type": "string",
+                      "default": ""
+                    },
+                    "hazelcast_response_timeout_millisec": {
+                      "title": "IMDG Response Timeout, milliseconds",
+                      "description": "Timeout to wait for response, milliseconds",
+                      "type": "string",
+                      "default": ""
+                    }
+                  },
+                  "required": [
+                    "hazelcast_instance_address",
+                    "hazelcast_request_queue",
+                    "hazelcast_response_queue",
+                    "hazelcast_iso20022_validate",
+                    "hazelcast_response_timeout_millisec"
+                  ]
+                }
+              },
+              "required": [
+                "host",
+                "mgw_service",
+                "trust_alias"
+              ]
+            },
+            "forward_proxies": {
+              "title": "The Forward Proxy infrastructure Schema",
+              "description": "Parent element for capturing resilient Forward proxy infrastructure - one or more Forward Proxy instances.",
+              "type": "array",
+              "items": {
+                "title": "The Items Schema",
+                "type": "object",
+                "properties": {
+                  "hostname": {
+                    "title": "The Hostname Schema",
+                    "description": "Forward Proxy hostname",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "port": {
+                    "title": "The Port Schema",
+                    "description": "Forward proxy port",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "username": {
+                    "title": "The Forward proxy User Schema",
+                    "description": "Forward proxy user used to connect",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "password": {
+                    "title": "The Password Schema",
+                    "description": "Forward proxy password for the user used to connect",
+                    "type": "string",
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "hostname",
+                  "port"
+                ],
+                "dependencies": {
+                  "username": {
+                    "required": [
+                      "password"
+                    ]
+                  },
+                  "password": {
+                    "required": [
+                      "username"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "api_gateway"
+              ]
+            },
+            {
+              "required": [
+                "gpi_connector"
+              ]
+            },
+            {
+              "required": [
+                "microgateway"
+              ]
+            }
+          ]
+        },
+        "services": {
+          "title": "The Services Schema",
+          "description": "Parent element for defining API services used by the Business Application",
+          "type": "object",
+          "properties": {
+            "tracker_service_v2": {
+              "title": "The Gateway_tracker_service_v2 Schema",
+              "description": "absPath of gpi Tracker API service version 2 \"/swift-apitracker/v2\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v3": {
+              "title": "The Gateway_tracker_service_v3 Schema",
+              "description": "absPath of gpi Tracker API service version 3 - \"/swift-apitracker/v3\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v4": {
+              "title": "The Gateway_tracker_service_v4 Schema",
+              "description": "absPath of gpi Tracker API service version 4 - \"/swift-apitracker/v4\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5": {
+              "title": "The Gateway_tracker_service_v5 Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5_status_confirm_cct": {
+              "title": "The Gateway_tracker_service_v5_status_confirm_cct Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker-gcct-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5_status_confirm_cov": {
+              "title": "The Gateway_tracker_service_v5_status_confirm_cov Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker-gcov-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5_status_confirm_fit": {
+              "title": "The Gateway_tracker_service_v5_status_confirm_fit Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker-gfit-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5_status_confirm_inst": {
+              "title": "The Gateway_tracker_service_v5_status_confirm_inst Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker-gcct-inst-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_service_v5_status_confirm_universal": {
+              "title": "The Gateway_tracker_service_v5_status_confirm_universal Schema",
+              "description": "absPath of gpi Tracker API service version 5 - \"/swift-apitracker-uc-cct-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_pmi_service_v5": {
+              "title": "The gpi PMI Payment Status v5 Schema",
+              "description": "absPath of gpi PMI Payment Status API service version 5 - \"/swift-apitracker-pmi-pilot/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "tracker_stop_and_recall_payment_service_v6": {
+              "title": "The Gateway_tracker_stop_and_recall_payment_service_v6 Schema",
+              "description": "absPath of gpi Stop and Recall Payment service version 6 - \"/swift-apitracker-gsrp-pilot/v6\"",
+              "type": "string",
+              "default": ""
+            },
+            "g4c_service": {
+              "title": "The Gateway_g4c_service Schema",
+              "description": "absPath of g4c API service version 3 \"/swift-apitracker-g4c/v3\"",
+              "type": "string",
+              "default": ""
+            },
+            "g4c_service_v5": {
+              "title": "The Gateway_g4c_service v5 Schema",
+              "description": "absPath of g4c API service version 5 \"/swift-apitracker-g4c/v5\"",
+              "type": "string",
+              "default": ""
+            },
+            "g4c_notification_service_v4": {
+              "title": "The Gateway_g4c_notification_service v4 Schema",
+              "description": "absPath of g4c Notification API service version 5 \"/swift-gpi-for-corporates/v4\"",
+              "type": "string",
+              "default": ""
+            },
+            "preval_service": {
+              "title": "The Gateway_preval_service Schema",
+              "description": "absPath of gpi prevalidation API service version 1 \"/swift-preval/v1\"",
+              "type": "string",
+              "default": ""
+            },
+            "preval_service_v2": {
+              "title": "The Gateway_preval_service v2 Schema",
+              "description": "absPath of gpi prevalidation API service version 2 \"/swift-preval/v2\"",
+              "type": "string",
+              "default": ""
+            },
+            "swiftref_service": {
+              "title": "The Gateway_swiftref_service Schema",
+              "description": "absPath of SWIFTRef API service version 1 \"/swiftref-api-phase1-pilot/v1\"",
+              "type": "string",
+              "default": ""
+            },
+            "sads_service": {
+              "title": "The Gateway_swiftref_sads_service Schema",
+              "description": "absPath of SWIFTRef Automatic Download Service API service version 1 ",
+              "type": "string",
+              "default": ""
+            },
+            "kyc_service": {
+              "title": "The KYC_service Schema",
+              "description": "absPath of KYC API service version 1 ",
+              "type": "string",
+              "default": ""
+            },
+            "gcase_service": {
+              "title": "The Gateway_GCASE_sads_service Schema",
+              "description": "absPath of GCASE Service API service version 1 ",
+              "type": "string",
+              "default": ""
+            },
+            "gcase_service_v5": {
+              "title": "The Gateway_GCASE_sads_service v5 Schema",
+              "description": "absPath of GCASE Service API service version 5 ",
+              "type": "string",
+              "default": ""
+            },
+            "gcase_service_v6": {
+              "title": "The Gateway_GCASE_sads_service v6 Schema",
+              "description": "absPath of GCASE Service API service version 6 ",
+              "type": "string",
+              "default": ""
+            },
+            "compliance_analytics_service": {
+              "title": "The Compliance Analytics Service Schema",
+              "description": "absPath of Compliance Analytics service version 1 ",
+              "type": "string",
+              "default": ""
+            },
+            "banking_analytics_service": {
+              "title": "The Banking Analytics Service Schema",
+              "description": "absPath of Banking Analytics service version 1 ",
+              "type": "string",
+              "default": ""
+            },
+            "notif_subscriber_service_v1": {
+              "title": "The Notification Subscriber Service v1 Schema",
+              "description": "absPath of Notification Subscriber Service version 1 \"/swift-notif-subscriber-pilot/v1\"",
+              "type": "string",
+              "default": ""
+            },
+            "notif_provider_service_v1": {
+              "title": "The Notification Provider Service v1 Schema",
+              "description": "absPath of Notification Provider Service version 1 \"/swift-notif-provider-pilot/v1\"",
+              "type": "string",
+              "default": ""
+            },
+            "slvp_service_v4": {
+              "title": "The gpi API Payment Status Low Value Payments v4 Schema",
+              "description": "gpi API Payment Status Low Value Payments",
+              "type": "string",
+              "default": ""
+            },
+            "slvp_service_v5": {
+              "title": "The gpi API Payment Status Low Value Payments v5 Schema",
+              "description": "gpi API Payment Status Low Value Payments",
+              "type": "string",
+              "default": ""
+            },
+            "securities_view_service_v1": {
+              "title": "The Securities_view_service v1 Schema",
+              "description": "absPath of Securities Settlement View API service version 1 - \"/swift-securities-view-pilot/v1\"",
+              "type": "string",
+              "default": ""
+            },
+            "monitoring_service_v20": {
+              "title": "The MGW microservice for monitoring APi",
+              "description": "MGW microservice monitoring APi for version 2",
+              "type": "string",
+              "default": ""
+            },
+            "management_service_v20": {
+              "title": "The MGW microservice for management APi",
+              "description": "MGW microservice management APi for version 2",
+              "type": "string",
+              "default": ""
+            },
+            "configuration_service_v20": {
+              "title": "The MGW microservice for configuration APi",
+              "description": "MGW microservice configuration APi for version 2",
+              "type": "string",
+              "default": ""
+            },
+            "monitoring_service_v10": {
+              "title": "The MGW microservice for monitoring APi",
+              "description": "MGW microservice monitoring APi for version 1",
+              "type": "string",
+              "default": ""
+            },
+            "management_service_v10": {
+              "title": "The MGW microservice for management APi",
+              "description": "MGW microservice management APi for version 1",
+              "type": "string",
+              "default": ""
+            },
+            "configuration_service_v10": {
+              "title": "The MGW microservice for configuration APi",
+              "description": "MGW microservice configuration APi for version 1",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "tracker_service_v2"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v3"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v4"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5_status_confirm_cct"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5_status_confirm_cov"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5_status_confirm_fit"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5_status_confirm_inst"
+              ]
+            },
+            {
+              "required": [
+                "tracker_service_v5_status_confirm_universal"
+              ]
+            },
+            {
+              "required": [
+                "tracker_pmi_service_v5"
+              ]
+            },
+            {
+              "required": [
+                "tracker_stop_and_recall_payment_service_v6"
+              ]
+            },
+            {
+              "required": [
+                "g4c_service"
+              ]
+            },
+            {
+              "required": [
+                "g4c_service_v5"
+              ]
+            },
+            {
+              "required": [
+                "g4c_notification_service_v4"
+              ]
+            },
+            {
+              "required": [
+                "preval_service"
+              ]
+            },
+            {
+              "required": [
+                "preval_service_v2"
+              ]
+            },
+            {
+              "required": [
+                "swiftref_service"
+              ]
+            },
+            {
+              "required": [
+                "sads_service"
+              ]
+            },
+            {
+              "required": [
+                "kyc_service"
+              ]
+            },
+            {
+              "required": [
+                "gcase_service"
+              ]
+            },
+            {
+              "required": [
+                "gcase_service_v5"
+              ]
+            },
+            {
+              "required": [
+                "gcase_service_v6"
+              ]
+            },
+            {
+              "required": [
+                "compliance_analytics_service"
+              ]
+            },
+            {
+              "required": [
+                "banking_analytics_service"
+              ]
+            },
+            {
+              "required": [
+                "notif_subscriber_service_v1"
+              ]
+            },
+            {
+              "required": [
+                "notif_provider_service_v1"
+              ]
+            },
+            {
+              "required": [
+                "slvp_service_v4"
+              ]
+            },
+            {
+              "required": [
+                "slvp_service_v5"
+              ]
+            },
+            {
+              "required": [
+                "securities_view_service_v1"
+              ]
+            },
+            {
+              "required": [
+                "monitoring_service_v20"
+              ]
+            },
+            {
+              "required": [
+                "management_service_v20"
+              ]
+            },
+            {
+              "required": [
+                "configuration_service_v20"
+              ]
+            },
+            {
+              "required": [
+                "monitoring_service_v10"
+              ]
+            },
+            {
+              "required": [
+                "management_service_v10"
+              ]
+            },
+            {
+              "required": [
+                "configuration_service_v10"
+              ]
+            }
+          ]
+        },
+        "security_footprints": {
+          "title": "The Security_footprints Schema",
+          "description": "Parent element for defining security footprints applicable to the client application - software PKI certificate, SAG, gpi Connector LAU attributes",
+          "type": "object",
+          "properties": {
+            "common": {
+              "title": "The Common Schema",
+              "description": "Parent element for defining software certificate information",
+              "type": "object",
+              "properties": {
+                "cert_path": {
+                  "title": "The Cert_path Schema",
+                  "description": "Location of the java key store file. Common java key store file for software certificate and SAG SSL certificate. Example, C:\\\\SWIFT\\\\ trustCertStorage.jks",
+                  "type": "string",
+                  "default": ""
+                },
+                "cert_password": {
+                  "title": "The Cert_password Schema",
+                  "description": "Alias name corresponding to the PKI certificate on the disk",
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": [
+                "cert_path",
+                "cert_password"
+              ]
+            },
+            "software_certificate": {
+              "title": "The Software_certificate Schema",
+              "description": "Parent element for software certificate",
+              "type": "object",
+              "properties": {
+                "cert_alias": {
+                  "title": "The Cert_alias Schema",
+                  "description": "Alias name corresponding to the PKI certificate in the java key store (refer to \"common\" object)",
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": [
+                "cert_alias"
+              ]
+            },
+            "sags": {
+              "title": "The SAG infrastructure Schema",
+              "description": "Parent element for capturing resilient SAG infrastructure - one or more SAG instances.",
+              "type": "array",
+              "items": {
+                "title": "The Items Schema",
+                "type": "object",
+                "properties": {
+                  "hostname": {
+                    "title": "The Hostname Schema",
+                    "description": "SAG server hostname",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "port": {
+                    "title": "The Port Schema",
+                    "description": "SAG Port",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "ssl_dn": {
+                    "title": "The Ssl_dn Schema",
+                    "description": "SAG SSL DN corresponding to Web Platform configuration.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "mp": {
+                    "title": "The MP Schema",
+                    "description": "Name of the Messaging Partner in the relaxed mode",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "user_dn": {
+                    "title": "The User_dn Schema",
+                    "description": "Subject DN of the PKI certificate on the HSM",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "lau_key": {
+                    "title": "The Lau_key Schema",
+                    "description": "LAU Key to be used with SAG.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "ssl_alias": {
+                    "title": "The Ssl_alias Schema",
+                    "description": "Alias corresponding to the SAG public certificate which is used by SDK in the context of establishing a 1-way SSL connection with SAG.",
+                    "type": "string",
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "hostname",
+                  "port",
+                  "ssl_dn",
+                  "mp",
+                  "user_dn",
+                  "lau_key",
+                  "ssl_alias"
+                ]
+              }
+            },
+            "laus": {
+              "title": "The Lau Schema",
+              "description": "Parent element that captures gpi Connector and back office application authentication (LAU) details.",
+              "type": "array",
+              "items": {
+                "title": "The Items Schema",
+                "type": "object",
+                "properties": {
+                  "lau_application_id": {
+                    "title": "The Lau_application_id Schema",
+                    "description": "Application id as specified in swap-proxy.xml:\r\n<BackOfficeApplication>\r\n      <ApplicationId>BO1</ApplicationId>�</BackOfficeApplication>",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "lau_version": {
+                    "title": "The Lau_version Schema",
+                    "description": "LAU Signature header version number. 1.0 for the current release.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "lau_key": {
+                    "title": "The Lau_key Schema",
+                    "description": "LAU Key is a concatenation of LauKeyLeftPart and LauKeyRightPart from swap-proxy.xml file.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "lau_appl_api_key": {
+                    "title": "The Lau_appl_api_key Schema",
+                    "description": "UUID value (any) generated for the application integration",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "lau_rbac_role": {
+                    "title": "The Lau_rbac_role Schema",
+                    "description": "Used in the context of gpi Tracker API. Used to indicate the RBAC role applicable for the API calls  ",
+                    "type": "string",
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "lau_application_id",
+                  "lau_version",
+                  "lau_key",
+                  "lau_appl_api_key",
+                  "lau_rbac_role"
+                ]
+              }
+            },
+            "basic": {
+              "title": "The Basic Auth Schema",
+              "description": "Parent element for capturing Basic Auth schema",
+              "type": "object",
+              "properties": {
+                "username": {
+                  "title": "The Username",
+                  "description": "Username",
+                  "type": "string",
+                  "default": ""
+                },
+                "password": {
+                  "title": "The Password",
+                  "description": "password",
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": [
+                "username",
+                "password"
+              ]
+            },
+            "mgwjws": {
+              "title": "The MGWJWS Schema",
+              "description": "Parent element that captures microgateway and back office application authentication (JWS) details.",
+              "type": "array",
+              "items": {
+                "title": "The Items Schema",
+                "type": "object",
+                "properties": {
+                  "application_name": {
+                    "title": "The Mgw_application_id Schema",
+                    "description": "Back office Application id as configured in Microgateway database.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "profile_id": {
+                    "title": "The Profile_id Schema",
+                    "description": "Application profile Id as configuraed in Microgateway database.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "shared_secret": {
+                    "title": "The Shared_secret Schema",
+                    "description": "Shared secret as configured in Microgateway database.",
+                    "type": "string",
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "application_name",
+                  "profile_id",
+                  "shared_secret"
+                ]
+              }
+            }
+          },
+          "allOf": [
+            {
+              "required": [
+                "common"
+              ]
+            },
+            {
+              "anyOf": [
+                {
+                  "required": [
+                    "software_certificate"
+                  ]
+                },
+                {
+                  "required": [
+                    "sags"
+                  ]
+                },
+                {
+                  "required": [
+                    "lau"
+                  ]
+                },
+                {
+                  "required": [
+                    "basic"
+                  ]
+                },
+                {
+                  "required": [
+                    "mgwjws"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "hosts",
+        "services",
+        "security_footprints"
+      ]
+    }
+  },
+  "required": [
+    "configuration"
+  ],
+  "definitions": {}
+}
