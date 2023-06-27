@@ -32,7 +32,7 @@ configuration:
         # Example 2, swift.apitracker
         # Example 3, swift.apitracker swift.preval
         # Example 4, swift.apitracker/FullViewer swift.preval/access_to_service
-        scope: "swift.apitracker/FullViewer swift.preval/access_to_service"
+        scope: "swift.apitracker/FullViewer"
 #      authorization_service_v2:
 #        # Default value, do not change url parameter value
 #        url: "oauth2/v2/token"
