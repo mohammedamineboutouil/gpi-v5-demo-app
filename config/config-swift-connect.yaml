@@ -33,16 +33,16 @@ configuration:
         # Example 3, swift.apitracker swift.preval
         # Example 4, swift.apitracker/FullViewer swift.preval/access_to_service
         scope: "swift.apitracker/FullViewer swift.preval/access_to_service"
-      authorization_service_v2:
-        # Default value, do not change url parameter value
-        url: "oauth2/v2/token"
-        # Replace audience parameter to api-test.swiftnet.sipn.swift.com/oauth2/v2/token when using pilot environment
-        audience: "sandbox.swift.com/oauth2/v2/token"
-        # OAuth token session scope.
-        # Client Applications can request API Gateway OAuth scope and this is mandatory.
-        # Example 1, urn:notification:provider:internal
-        # Example 2, urn:swiftref:internal
-        scope: "urn:notification:provider:internal"
+#      authorization_service_v2:
+#        # Default value, do not change url parameter value
+#        url: "oauth2/v2/token"
+#        # Replace audience parameter to api-test.swiftnet.sipn.swift.com/oauth2/v2/token when using pilot environment
+#        audience: "sandbox.swift.com/oauth2/v2/token"
+#        # OAuth token session scope.
+#        # Client Applications can request API Gateway OAuth scope and this is mandatory.
+#        # Example 1, urn:notification:provider:internal
+#        # Example 2, urn:swiftref:internal
+#        scope: "urn:notification:provider:internal"
     gpi_connector:
       # Your gpi Connector hostname and port. For example, "https://bewx2768:9000".
       host: "https://<domain_name>:<port>"
